@@ -29,7 +29,7 @@ public class EmployeePersonalDetailController {
     @GetMapping("/{userId}/personalDetails")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public EmployeePersonalDetail getPersonalDetails(@PathVariable("userId") long userId){
-        return detailsRepository.findById(userId).get();
+        return detailsRepository.getEmployeeDetails(userId);
     }
 
     @PostMapping("/{userId}/addDetails")
@@ -40,13 +40,17 @@ public class EmployeePersonalDetailController {
         return detailsRepository.save(personalDetail);
     }
 
-    @PutMapping("/{userId}/editDetails/{id}")
+
+
+    @PutMapping("/{userId}/editDetails")
     @PreAuthorize("hasRole('USER')")
-    public EmployeePersonalDetail editDetails(@RequestBody EmployeePersonalDetail personalDetail , @PathVariable("userId") long userId,@PathVariable("id") long id){
+    public EmployeePersonalDetail editDetails(@RequestBody EmployeePersonalDetail personalDetail , @PathVariable("userId") long userId){
         User user = userRepository.findById(userId).get();
         personalDetail.setUserId(user);
 
-        EmployeePersonalDetail employeePersonalDetail = detailsRepository.findById(id).get();
+//        EmployeePersonalDetail employeePersonalDetail = detailsRepository.findById(id).get();
+        EmployeePersonalDetail employeePersonalDetail = detailsRepository.getEmployeeDetails(userId);
+
         if(personalDetail.getFirstName()!=null) employeePersonalDetail.setFirstName(personalDetail.getFirstName());
 //        else employeePersonalDetail.setFirstName(personalDetail.getFirstName());
 

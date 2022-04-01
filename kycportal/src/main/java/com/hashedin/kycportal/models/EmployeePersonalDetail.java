@@ -7,7 +7,7 @@ import java.util.Date;
 @Entity
 public class EmployeePersonalDetail {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @OneToOne(cascade = CascadeType.ALL)

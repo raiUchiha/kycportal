@@ -7,13 +7,12 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.hashedin.kycportal.models.ERole;
-import com.hashedin.kycportal.models.Role;
-import com.hashedin.kycportal.models.User;
+import com.hashedin.kycportal.models.*;
 import com.hashedin.kycportal.payload.request.LoginRequest;
 import com.hashedin.kycportal.payload.request.SignupRequest;
 import com.hashedin.kycportal.payload.response.JwtResponse;
 import com.hashedin.kycportal.payload.response.MessageResponse;
+import com.hashedin.kycportal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hashedin.kycportal.repository.RoleRepository;
-import com.hashedin.kycportal.repository.UserRepository;
 import com.hashedin.kycportal.security.jwt.JwtUtils;
 import com.hashedin.kycportal.security.services.UserDetailsImpl;
 
@@ -50,6 +47,24 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  EmployeePersonalDetailRepository personalDetail;
+
+  @Autowired
+  EmployeeBankDetailsRepository bankDetailsRepository;
+
+  @Autowired
+  EmployeeEducationRepository educationRepository;
+
+  @Autowired
+  EmployeeAddressRepository addressRepository;
+
+  @Autowired
+  EmployeeAttachmentsRepository attachmentsRepository;
+
+  @Autowired
+  EmployementRepository employementRepository;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -123,7 +138,31 @@ public class AuthController {
     }
 
     user.setRoles(roles);
-    userRepository.save(user);
+    User savedUse = userRepository.save(user);
+
+    EmployeePersonalDetail personalDetails = new EmployeePersonalDetail();
+    personalDetails.setUserId(savedUse);
+    personalDetail.save(personalDetails);
+
+    EmployeeBankDetails bankDetails = new EmployeeBankDetails();
+    bankDetails.setUserId(savedUse);
+    bankDetailsRepository.save(bankDetails);
+
+    EmployeeEducation employeeEducation = new EmployeeEducation();
+    employeeEducation.setUserId(savedUse);
+    educationRepository.save(employeeEducation);
+
+    EmployeeAttachments attachments = new EmployeeAttachments();
+    attachments.setUserId(savedUse);
+    attachmentsRepository.save(attachments);
+
+    EmployeeAddressAndContact addressAndContact = new EmployeeAddressAndContact();
+    addressAndContact.setUserId(savedUse);
+    addressRepository.save(addressAndContact);
+
+    Employement employement = new Employement();
+    employement.setUserId(savedUse);
+    employementRepository.save(employement);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }

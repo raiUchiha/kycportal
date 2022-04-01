@@ -17,7 +17,7 @@ public class EmployeeAddressAndContact {
     private String state;
     private int pinCode;
     private String country;
-    private int contactNo;
+    private long contactNo;
 
     public long getId() {
         return id;
@@ -83,11 +83,11 @@ public class EmployeeAddressAndContact {
         this.country = country;
     }
 
-    public int getContactNo() {
+    public long getContactNo() {
         return contactNo;
     }
 
-    public void setContactNo(int contactNo) {
+    public void setContactNo(long contactNo) {
         this.contactNo = contactNo;
     }
 }

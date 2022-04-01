@@ -1,16 +1,25 @@
 package com.hashedin.kycportal.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Generated;
+
 import javax.persistence.*;
+
+import java.util.Date;
+
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 public class EmployeeEducation {
     @Id
+    @GeneratedValue(strategy = AUTO)
     private long id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="userId")
     private User userId;
     private String highestEducationDegree;
-    private int yearOfPassing;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date yearOfPassing;
     private int cpi;
     private String college;
     private String University;
@@ -39,11 +48,11 @@ public class EmployeeEducation {
         this.highestEducationDegree = highestEducationDegree;
     }
 
-    public int getYearOfPassing() {
+    public Date getYearOfPassing() {
         return yearOfPassing;
     }
 
-    public void setYearOfPassing(int yearOfPassing) {
+    public void setYearOfPassing(Date yearOfPassing) {
         this.yearOfPassing = yearOfPassing;
     }
 
