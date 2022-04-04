@@ -2,13 +2,14 @@ package com.hashedin.kycportal.controllers;
 
 import com.hashedin.kycportal.models.EmployeePersonalDetail;
 import com.hashedin.kycportal.models.User;
-import com.hashedin.kycportal.repository.EmployeePersonalDetailRepository;
-import com.hashedin.kycportal.repository.UserRepository;
+import com.hashedin.kycportal.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,20 @@ public class EmployeePersonalDetailController {
     private EmployeePersonalDetailRepository detailsRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmployementRepository employementRepository;
+
+    @Autowired
+    private EmployeeEducationRepository educationRepository;
+
+    @Autowired
+    private EmployeeAttachmentsRepository attachmentsRepository;
+
+    @Autowired
+    private EmployeeBankDetailsRepository bankRepository;
+
+    @Autowired
+    private EmployeeAddressRepository addressRepository;
 
     @GetMapping("/personalDetails")
     @PreAuthorize("hasRole('USER')")
@@ -71,5 +86,24 @@ public class EmployeePersonalDetailController {
 
         return detailsRepository.save(employeePersonalDetail);
     }
+
+
+
+    @GetMapping("/{userId}/allDetails")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public List<Object> getAllUserDetails(@PathVariable("userId") long userId) {
+        User user = userRepository.findById(userId).get();
+//    detailsRepository.getEmployeeDetails(userId)
+        List <Object> details = new ArrayList<>();
+        details.add(detailsRepository.getEmployeeDetails(userId));
+        details.add(employementRepository.getEmployeeDetails(userId));
+        details.add(educationRepository.getEmployeeDetails(userId));
+        details.add(bankRepository.getEmployeeDetails(userId));
+        details.add(attachmentsRepository.getEmployeeDetails(userId));
+        details.add(addressRepository.getEmployeeDetails(userId));
+
+        return details;
+    }
+
 
 }
